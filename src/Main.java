@@ -32,44 +32,44 @@ public class Main {
 
 	public static final int HTTP_PORT = 8080;
 
+	public static class Post extends SqlRow {
+		public Post(int id, String body) {
+			super(Int(id), new SqlValue.Text(body));
+		}
+
+		public int ID() {
+			return ((SqlValue.Int) get(0)).asInt();
+		}
+
+		public String name() {
+			return ((SqlValue.Text) get(1)).asString();
+		}
+	}
+
 	/**
 	 * Define the Schema for the Users table.
 	 *
 	 * @author David J. Pearce
 	 *
 	 */
-	public static class Posts extends SqlSchema<Posts.Row> {
+	public static class Posts extends SqlTable<Post> {
 
-		public Posts(){
-			super(new SqlSchema.Column("ID", SqlType.INT),
-				  new SqlSchema.Column("body", SqlType.VARCHAR(20)));
+		public Posts(SqlDatabase db) {
+			super(db, "posts", new SqlTable.Column("ID", SqlType.INT),
+					new SqlTable.Column("body", SqlType.VARCHAR(20)));
 		};
 
 		@Override
-		public Row construct(Object... values) {
-			return new Row((Integer) values[0],(String)values[1]);
+		public Post construct(Object... values) {
+			return new Post((Integer) values[0],(String)values[1]);
 		}
 
-		public static class Row extends SqlRow {
-			public Row(int id, String name) {
-				super(Int(id), new SqlValue.Text(name));
-			}
-
-			public int ID() {
-				return ((SqlValue.Int) get(0)).asInt();
-			}
-
-			public String name() {
-				return ((SqlValue.Text) get(1)).asString();
-			}
-		}
 	}
 
 	public static void main(String[] args) throws SQLException {
 		Connection connection = getDatabaseConnection();
 		SqlDatabase db = new SqlDatabase(connection);
-		db.bindTable("users", new Posts());
-		SqlTable<Posts.Row> posts = db.getTable("users");
+		Posts posts = new Posts(db);
 
 		SocketConfig socketConfig = SocketConfig.custom()
 				.setSoTimeout(15000)
@@ -121,9 +121,9 @@ public class Main {
 	}
 
 	public static class FrontPage extends HttpMethodDispatchHandler {
-		private final SqlTable<Posts.Row> posts;
+		private final Posts posts;
 
-		public FrontPage(SqlTable<Posts.Row> posts) {
+		public FrontPage(Posts posts) {
 			super(HttpMethodDispatchHandler.ALLOW_GET);
 			this.posts = posts;
 		}
@@ -164,10 +164,10 @@ public class Main {
 			writer.println("<body>");
 			writer.println("<center>");
 			writer.println("<table border=\"1px\" width=\"80%\">");
-			for(Posts.Row row : posts.select()) {
+			for(Post post : posts.select()) {
 				writer.println("<tr>");
-				writer.println("<td>" + row.ID() + "</td>");
-				writer.println("<td>" + row.name() + "</td>");
+				writer.println("<td>" + post.ID() + "</td>");
+				writer.println("<td>" + post.name() + "</td>");
 				writer.println("</tr>");
 			}
 			writer.println("</table>");
