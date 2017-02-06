@@ -1,0 +1,51 @@
+/* ====================================================== */
+/* Page Layout */
+/* ====================================================== */
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: "helvetica";
+    background: #cccccc;
+}
+
+#header {
+    width: 100%;
+    background: #dddddd;
+    margin-bottom: 2em;
+    padding: 1em;
+}
+
+#container {
+    margin: 2em auto;
+    padding: 0px;
+    width: 1024px;
+    text-align: left;
+    border: 1px solid black;
+    background: #ffffff;
+    box-shadow: 2px 2px 5px 0 #000;
+}
+
+#content {
+    padding: 1em;
+    font-family: 'Pontano Sans', Verdana, Helvetica, sans-serif;
+    font-size: 11pt;
+}
+
+/* ====================================================== */
+/* Post Settings */
+/* ====================================================== */
+
+.post {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.post-headline {
+    font-size: 14pt;
+}
+
+.post-byline {
+    font-size: 8pt;
+    padding-bottom: 10px;
+}
