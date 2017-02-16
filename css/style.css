@@ -3,27 +3,56 @@
 /* ====================================================== */
 
 body {
-    margin: 0px;
-    padding: 0px;
-    font-family: "helvetica";
-    background: #cccccc;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: verdana, arial, sans-serif;
+    font-size: 0.85em;
+    line-height: 1.5;
+    color: #000000;
+    background-repeat: repeat-y;
 }
+
+a:link,
+a:visited,
+a:active {
+    color: #A58158;
+    font-weight: normal;
+    text-decoration: none;
+}
+a:hover {
+    color: #D7CF88;
+    font-weight: normal;
+    text-decoration: none
+}
+
 
 #header {
     width: 100%;
     background: #dddddd;
     margin-bottom: 2em;
     padding: 1em;
+    text-align: left;
 }
-
-#container {
+h1.blogtitle {
+    display: block;
+    margin: 0;
+    padding: 20px 0px 0px 20px;
+    letter-spacing: -1px;
+    line-height: 1.0em;
+    font-size: 48pt;
+    font-family: trebuchet ms, verdana, arial;
+    font-smooth: always;
+}
+div#container {
     margin: 2em auto;
     padding: 0px;
     width: 1024px;
     text-align: left;
-    border: 1px solid black;
+    //border: 1px solid black;
     background: #ffffff;
-    box-shadow: 2px 2px 5px 0 #000;
 }
 
 #content {
@@ -37,7 +66,7 @@ body {
 /* ====================================================== */
 
 .post {
-    border: 1px solid black;
+    //border: 1px solid black;
     padding: 10px;
 }
 
