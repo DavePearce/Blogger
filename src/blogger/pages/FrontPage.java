@@ -17,13 +17,13 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.protocol.HttpContext;
 
 import blogger.Main.Post;
-import blogger.Main.Posts;
 import jwebkit.http.HttpMethodDispatchHandler;
+import jwebkit.sql.SqlTable;
 
 public class FrontPage extends HttpMethodDispatchHandler {
-	private final Posts posts;
+	private final SqlTable<Post> posts;
 
-	public FrontPage(Posts posts) {
+	public FrontPage(SqlTable<Post> posts) {
 		super(HttpMethodDispatchHandler.ALLOW_GET);
 		this.posts = posts;
 	}
@@ -78,7 +78,7 @@ public class FrontPage extends HttpMethodDispatchHandler {
 	public void writePost(Post post, PrintWriter writer) {
 		writer.println("<div class='post'>");
 		writer.println("<div class='post-headline'>");
-		writer.println(post.name());
+		writer.println(post.title());
 		writer.println("</div><div class='post-byline'>");
 		writer.println("By Dave, ");
 		writer.println("on " + post.date());
