@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.apache.http.protocol.HttpContext;
 
 import blogger.pages.FrontPage;
+import blogger.pages.PostPages;
 import jwebkit.http.HttpFileHandler;
 import jwebkit.sql.*;
 
@@ -44,14 +46,22 @@ public class Main {
 
 	public static class Post extends AbstractSqlRow {
 		public static final SqlTable.Column[] schema = {
+				// Unique ID of post
 				new SqlTable.Column("ID", SqlType.INT),
+				// Title of the post
 				new SqlTable.Column("title", SqlType.TINYTEXT),
+				// Link is component of perma-link
+				new SqlTable.Column("link", SqlType.TINYTEXT),
+				// Contents of post (HTML)
 				new SqlTable.Column("body", SqlType.LONGTEXT),
-				new SqlTable.Column("date", SqlType.DATE)
+				// Exerpt
+				new SqlTable.Column("exerpt", SqlType.TEXT),
+				// Publication date
+				new SqlTable.Column("datetime", SqlType.DATETIME)
 		};
 
-		public Post(int id, String title, String body, LocalDate date) {
-			super(Int(id), new SqlValue.Text(title), new SqlValue.Text(body), new SqlValue.Date(date));
+		public Post(int id, String title, String link, String body, String exerpt, LocalDateTime datetime) {
+			super(Int(id), new SqlValue.Text(title), new SqlValue.Text(link), new SqlValue.Text(body),  new SqlValue.Text(exerpt), new SqlValue.DateTime(datetime));
 		}
 
 		public Post(SqlValue...values) {
@@ -66,19 +76,29 @@ public class Main {
 			return ((SqlValue.Text) get(1)).asString();
 		}
 
-		public String body() {
+		public String link() {
 			return ((SqlValue.Text) get(2)).asString();
 		}
 
-		public LocalDate date() {
-			return ((SqlValue.Date) get(3)).asLocalDate();
+		public String body() {
+			return ((SqlValue.Text) get(3)).asString();
+		}
+
+		public String excerpt() {
+			return ((SqlValue.Text) get(4)).asString();
+		}
+
+		public LocalDateTime date() {
+			return ((SqlValue.DateTime) get(5)).asLocalDateTime();
 		}
 	}
 
 	public static void main(String[] args) throws SQLException, IOException {
 		// First, read in the username and password
-		String username = readString("Username: ");
-		String password = readString("Password: ");
+//		String username = readString("Username: ");
+//		String password = readString("Password: ");
+		String username = System.getenv("USERNAME");
+		String password = System.getenv("PASSWORD");
 		// Second, create the database connection
 		Connection connection = getMySqlDatabaseConnection(username,new String(password));
 		SqlDatabase db = new SqlDatabase(connection);
@@ -96,6 +116,7 @@ public class Main {
 				.setExceptionLogger(new Logger())
 				.registerHandler("/css/*", new HttpFileHandler(new File("."),TEXT_CSS))
 				.registerHandler("/", new FrontPage(posts))
+				.registerHandler("/*", new PostPages(posts))
 				.create();
 		try {
 			if(!posts.exists()) {

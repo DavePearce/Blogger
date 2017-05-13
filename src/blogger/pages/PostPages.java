@@ -18,12 +18,14 @@ import org.apache.http.protocol.HttpContext;
 
 import blogger.Main.Post;
 import jwebkit.http.HttpMethodDispatchHandler;
+import jwebkit.sql.SqlQuery;
 import jwebkit.sql.SqlTable;
+import jwebkit.sql.SqlValue;
 
-public class FrontPage extends HttpMethodDispatchHandler {
+public class PostPages extends HttpMethodDispatchHandler {
 	private final SqlTable<Post> posts;
 
-	public FrontPage(SqlTable<Post> posts) {
+	public PostPages(SqlTable<Post> posts) {
 		super(HttpMethodDispatchHandler.ALLOW_GET);
 		this.posts = posts;
 	}
@@ -32,11 +34,13 @@ public class FrontPage extends HttpMethodDispatchHandler {
 	public void get(HttpRequest request, HttpResponse response, HttpContext context)
 			throws HttpException, IOException {
 		String uri = request.getRequestLine().getUri();
+		Post post = getPost(uri);
 		try {
+			//
 			List<NameValuePair> parameters = new URIBuilder(uri).getQueryParams();
 			ByteArrayOutputStream ous = new ByteArrayOutputStream();
 			PrintWriter writer = new PrintWriter(ous);
-			writePage(writer);
+			writePage(writer,post);
 			writer.flush();
 			response.setStatusCode(HttpStatus.SC_OK);
 			response.setEntity(new ByteArrayEntity(ous.toByteArray(), ContentType.TEXT_HTML));
@@ -45,11 +49,12 @@ public class FrontPage extends HttpMethodDispatchHandler {
 		}
 	}
 
-	private void writePage(PrintWriter writer) {
+
+	private void writePage(PrintWriter writer, Post post) {
 		writer.println("<!DOCTYPE html>");
 		writer.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"en-US\">");
 		writeHeader(writer);
-		writeBody(writer);
+		writeBody(writer, post);
 		writer.println("</html>");
 	}
 
@@ -60,7 +65,7 @@ public class FrontPage extends HttpMethodDispatchHandler {
 		writer.println("</head>");
 	}
 
-	public void writeBody(PrintWriter writer) {
+	public void writeBody(PrintWriter writer, Post p) {
 		writer.println("<body>");
 		writer.println("<div id='header'>");
 		writer.println("<h1 class='blogtitle'>Whiley</h1>");
@@ -68,32 +73,26 @@ public class FrontPage extends HttpMethodDispatchHandler {
 		writer.println("</div>");
 		writer.println("<div id='container'>");
 		writer.println("<div id='content'>");
-		int count = 10;
-		for(Post post : posts.select()) {
-			if(count-- < 0) {
-				break;
-			}
-			writePost(post,writer);
-		}
+		writePostTitle(writer,p);
+		writePostBody(writer,p);
 		writer.println("</div></div></body>");
 	}
 
-	public void writePost(Post post, PrintWriter writer) {
-		writer.println("<div class='post'>");
-		writer.println("<div class='post-headline'><a href=\"/" + post.link() + "\">");
-		writer.println(post.title());
-		writer.println("</a></div><div class='post-byline'>");
-		writer.println("By Dave, ");
-		writer.println("on " + post.date());
-		writer.println("</div><div class='post-body'>");
-		String exerpt = createExcerpt(post.body());
-		writer.println(exerpt);
-		writer.println("</div></div>");
+	protected void writePostTitle(PrintWriter writer, Post p) {
+		writer.print("<h1>");
+		writer.print(p.title());
+		writer.print("</h1>");
 	}
 
-	public String createExcerpt(String body) {
-		String stripped = body.replaceAll("\\<.*?\\>", "");
-		int length = Math.min(300, stripped.length());
-		return stripped.substring(0,length) + "...";
+	protected void writePostBody(PrintWriter writer, Post p) {
+		writer.print(p.body());
+	}
+
+	private Post getPost(String uri) {
+		String link = uri.substring(1);
+		for (Post p : posts.select().whereEqual("link", new SqlValue.Text(link))) {
+			return p;
+		}
+		return null;
 	}
 }
