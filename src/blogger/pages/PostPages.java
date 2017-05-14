@@ -22,60 +22,19 @@ import jwebkit.sql.SqlQuery;
 import jwebkit.sql.SqlTable;
 import jwebkit.sql.SqlValue;
 
-public class PostPages extends HttpMethodDispatchHandler {
+public class PostPages extends AbstractPage {
 	private final SqlTable<Post> posts;
 
 	public PostPages(SqlTable<Post> posts) {
-		super(HttpMethodDispatchHandler.ALLOW_GET);
 		this.posts = posts;
 	}
 
 	@Override
-	public void get(HttpRequest request, HttpResponse response, HttpContext context)
-			throws HttpException, IOException {
+	public void writeContent(PrintWriter writer, HttpRequest request) {
 		String uri = request.getRequestLine().getUri();
 		Post post = getPost(uri);
-		try {
-			//
-			List<NameValuePair> parameters = new URIBuilder(uri).getQueryParams();
-			ByteArrayOutputStream ous = new ByteArrayOutputStream();
-			PrintWriter writer = new PrintWriter(ous);
-			writePage(writer,post);
-			writer.flush();
-			response.setStatusCode(HttpStatus.SC_OK);
-			response.setEntity(new ByteArrayEntity(ous.toByteArray(), ContentType.TEXT_HTML));
-		} catch(URISyntaxException e) {
-			throw new HttpException("Invalid URI",e);
-		}
-	}
-
-
-	private void writePage(PrintWriter writer, Post post) {
-		writer.println("<!DOCTYPE html>");
-		writer.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"en-US\">");
-		writeHeader(writer);
-		writeBody(writer, post);
-		writer.println("</html>");
-	}
-
-	public void writeHeader(PrintWriter writer) {
-		writer.println("<head>");
-		writer.println("<title>Blogger Test</title>");
-		writer.println("<link href=\"css/style.css\" rel=\"stylesheet\" type=\"text/css\">");
-		writer.println("</head>");
-	}
-
-	public void writeBody(PrintWriter writer, Post p) {
-		writer.println("<body>");
-		writer.println("<div id='header'>");
-		writer.println("<h1 class='blogtitle'>Whiley</h1>");
-		writer.println("<p>A Programming Language with Extended Static Checking</p>");
-		writer.println("</div>");
-		writer.println("<div id='container'>");
-		writer.println("<div id='content'>");
-		writePostTitle(writer,p);
-		writePostBody(writer,p);
-		writer.println("</div></div></body>");
+		writePostTitle(writer,post);
+		writePostBody(writer,post);
 	}
 
 	protected void writePostTitle(PrintWriter writer, Post p) {
