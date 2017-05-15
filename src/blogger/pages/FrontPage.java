@@ -2,6 +2,7 @@ package blogger.pages;
 
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,16 +26,30 @@ public class FrontPage extends AbstractPage {
 
 	@Override
 	public void writeContent(PrintWriter writer, HttpRequest request) {
-		Iterator<Post> query = posts.select().iterator();
+		// Collect all the results into an array list.
+		ArrayList<Post> results = posts.select()
+				.orderByDesc(posts.getColumn("datetime"))
+				.collect(new ArrayList<Post>());
+		// Determine page number and other attributes
 		int page = getPage(request);
+		int numPages = results.size() / POSTS_PER_PAGE;
 		int start = page * POSTS_PER_PAGE;
-		int i = 0;
-		while(query.hasNext() && i < (start+POSTS_PER_PAGE)) {
-			Post post = query.next();
-			if(i >= start) {
-				writePost(post,writer);
-			}
-			i = i + 1;
+		int end = start + POSTS_PER_PAGE;
+		// Write post range selected
+		for(int i=start;i<end;++i) {
+			writePost(results.get(i), writer);
+		}
+		// Print out links for next pages
+
+		if(page > 0) {
+			writer.print("<a href=\"?page=" + (page-1) + "\">");
+			writer.print("<< previous");
+			writer.print("</a> ");
+		}
+		if((page+1) < numPages) {
+			writer.print("<a href=\"?page=" + (page+1) + "\">");
+			writer.print("more >>");
+			writer.print("</a> ");
 		}
 	}
 
