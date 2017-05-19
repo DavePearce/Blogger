@@ -42,6 +42,7 @@ public class Main {
 
 	public static final int HTTP_PORT = 8080;
 
+	public static final ContentType TEXT_JAVASCRIPT = ContentType.create("text/javascript");
 	public static final ContentType TEXT_CSS = ContentType.create("text/css");
 
 	public static class Post extends AbstractSqlRow {
@@ -115,6 +116,7 @@ public class Main {
 				.setSocketConfig(socketConfig)
 				.setExceptionLogger(new Logger())
 				.registerHandler("/css/*", new HttpFileHandler(new File("."),TEXT_CSS))
+				.registerHandler("/js/*", new HttpFileHandler(new File("."),TEXT_JAVASCRIPT))
 				.registerHandler("/", new FrontPage(posts))
 				.registerHandler("/*", new PostPages(posts))
 				.create();

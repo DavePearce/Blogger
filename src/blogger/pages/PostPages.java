@@ -38,13 +38,20 @@ public class PostPages extends AbstractPage {
 	}
 
 	protected void writePostTitle(PrintWriter writer, Post p) {
-		writer.print("<h1>");
+		writer.print("<div class=\"post-title\">");
 		writer.print(p.title());
-		writer.print("</h1>");
+		writer.print("</div>");
 	}
 
 	protected void writePostBody(PrintWriter writer, Post p) {
-		writer.print(p.body());
+		writer.print("<div class=\"post-body\">");
+		String body = stripWhileyTags(p.body());
+		writer.print(body);
+		writer.print("</div>");
+	}
+
+	private String stripWhileyTags(String body) {
+		return body.replaceAll("\\[whiley\\]", "<pre  class='brush: whiley;'>").replaceAll("\\[/whiley\\]","</pre>");
 	}
 
 	private Post getPost(String uri) {

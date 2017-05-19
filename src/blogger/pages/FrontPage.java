@@ -60,7 +60,7 @@ public class FrontPage extends AbstractPage {
 		writer.println("</a></div><div class='post-byline'>");
 		writer.println("By Dave, ");
 		writer.println("on " + post.date());
-		writer.println("</div><div class='post-body'>");
+		writer.println("</div><div class='post-summary'>");
 		String exerpt = createExcerpt(post.body());
 		writer.println(exerpt);
 		writer.println("</div></div>");

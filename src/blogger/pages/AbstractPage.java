@@ -49,20 +49,55 @@ public abstract class AbstractPage extends HttpMethodDispatchHandler {
 		writer.println("<head>");
 		writer.println("<title>Blogger Test</title>");
 		writer.println("<link href=\"css/style.css\" rel=\"stylesheet\" type=\"text/css\">");
+		writer.println("<script type='text/javascript' src='js/shCore.js'></script>");
+		writer.println("<script type='text/javascript' src='js/shBrushWhiley.js'></script>");
 		writer.println("</head>");
 	}
 
 	public void writeBody(PrintWriter writer, HttpRequest request) {
 		writer.println("<body>");
 		writer.println("<div id='container'>");
+		writePageHeader(writer,request);
+		writePageOutline(writer,request);
+		writePageFooter(writer,request);
+
+		writer.println("</div></body>");
+	}
+
+	public void writePageHeader(PrintWriter writer, HttpRequest request) {
 		writer.println("<div id='header'>");
 		writer.println("<h1 class='blogtitle'>Whiley</h1>");
 		writer.println("<p>A Programming Language with Extended Static Checking</p>");
 		writer.println("</div>");
-		writer.println("<div id='content'>");
-		writeContent(writer,request);
-		writer.println("</div></div></body>");
 	}
-
+	public void writePageOutline(PrintWriter writer, HttpRequest request) {
+		writer.println("<table id='layout'>");
+		writer.println("<tr>");
+		writeLeftSidebar(writer,request);
+		writePageContent(writer,request);
+		writeRightSidebar(writer,request);
+		writer.println("</tr>");
+		writer.println("</table>");
+	}
+	public void writeLeftSidebar(PrintWriter writer, HttpRequest request) {
+		writer.println("<td id='left-sidebar'>");
+		writer.println("left sidebar");
+		writer.println("</td>");
+	}
+	public void writePageContent(PrintWriter writer, HttpRequest request) {
+		writer.println("<td id='content'>");
+		writeContent(writer,request);
+		writer.println("</td>");
+	}
+	public void writeRightSidebar(PrintWriter writer, HttpRequest request) {
+		writer.println("<td id='right-sidebar'>");
+		writer.println("right sidebar");
+		writer.println("</td>");
+	}
+	public void writePageFooter(PrintWriter writer, HttpRequest request) {
+		writer.println("<div id='footer'>");
+		writer.println("This is the footer");
+		writer.println("</div>");
+	}
 	public abstract void writeContent(PrintWriter writer, HttpRequest request);
 }
