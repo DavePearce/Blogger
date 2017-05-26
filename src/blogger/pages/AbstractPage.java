@@ -49,8 +49,6 @@ public abstract class AbstractPage extends HttpMethodDispatchHandler {
 		writer.println("<head>");
 		writer.println("<title>Blogger Test</title>");
 		writer.println("<link href=\"css/style.css\" rel=\"stylesheet\" type=\"text/css\">");
-		writer.println("<script type='text/javascript' src='js/shCore.js'></script>");
-		writer.println("<script type='text/javascript' src='js/shBrushWhiley.js'></script>");
 		writer.println("</head>");
 	}
 

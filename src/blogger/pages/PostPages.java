@@ -45,14 +45,47 @@ public class PostPages extends AbstractPage {
 
 	protected void writePostBody(PrintWriter writer, Post p) {
 		writer.print("<div class=\"post-body\">");
-		String body = stripWhileyTags(p.body());
+		String body = parseLines(p.body());
 		writer.print(body);
 		writer.print("</div>");
 	}
 
-	private String stripWhileyTags(String body) {
-		return body.replaceAll("\\[whiley\\]", "<pre  class='brush: whiley;'>").replaceAll("\\[/whiley\\]","</pre>");
+	private String parseLines(String body) {
+		String[] lines = body.split("\r\n");
+		StringBuilder builder = new StringBuilder();
+		boolean inCode = false;
+		for(int i=0;i!=lines.length;++i) {
+			String line = lines[i];
+			if(line.equals(START_TAG)) {
+				builder.append("<div class='whiley-code'>");
+				inCode=true;
+			} else if(line.equals(END_TAG)) {
+				builder.append("</div>");
+				inCode=false;
+			} else if(inCode) {
+				for (int j = 0; j != keywords.length; ++j) {
+					String keyword = keywords[j];
+					line = line.replaceAll(keyword, "<strong>" + keyword + "</strong>");
+				}
+				builder.append(line + "\n");
+			} else if(!inCode) {
+				builder.append("<p>");
+				builder.append(lines[i]);
+				builder.append("</p>");
+			}
+		}
+		return builder.toString();
 	}
+
+	private static final String[] keywords = { "case", "catch", "continue", "debug", "default", "do", "else", "ensures",
+			"export", "false", "fail", "finite", "for", "function", "if", "import", "in", "int", "is", "method",
+			"native", "new", "no", "null", "package", "private", "protected", "public", "requires", "return", "skip",
+			"some", "switch", "throw", "this", "throws", "total", "true", "type", "void", "where", "while" };
+
+
+	private static final String START_TAG = "[whiley]";
+	private static final String END_TAG = "[/whiley]";
+
 
 	private Post getPost(String uri) {
 		String link = uri.substring(1);

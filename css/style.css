@@ -126,8 +126,9 @@ h1.blogtitle {
 }
 
 .post-body {
-    padding: 10px;
-    font-size: 10pt;
+    font-family: Verdana, Calibri, Tahoma;
+    padding: 10pt;
+    font-size: 11pt;
     text-align: justify;
 }
 
@@ -136,12 +137,12 @@ h1.blogtitle {
 /* ====================================================== */
 
 pre {
-    font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace, !important;
-    font-weight: normal !important;
-    font-size: 10pt !important;
-    line-height: 1.1em !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+    font-weight: normal;
+    font-size: 10pt;
+    line-height: 1.1em;
+    margin: 0;
+    padding: 0;
     border: 1px solid #dddddd;
     background-color: #efefef
 }
@@ -151,5 +152,20 @@ code {
     white-space: pre-wrap;
     word-wrap: break-word;
     border: 1px solid #dddddd;
-    background-color: #efefef
+    background-color: #efefef;
+    border-radius: 3px;
+    padding: 1pt;
+}
+.whiley-code {
+    font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+    font-weight: normal;
+    font-size: 11pt;
+    margin-top: 5pt;
+    margin-bottom: 5pt;
+    padding: 5pt;
+    border: 1px solid #dddddd;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #efefef;
+    border-radius: 5px;    
 }
