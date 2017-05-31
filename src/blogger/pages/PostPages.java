@@ -45,17 +45,20 @@ public class PostPages extends AbstractPage {
 
 	protected void writePostBody(PrintWriter writer, Post p) {
 		writer.print("<div class=\"post-body\">");
-		String body = parseLines(p.body());
+		String body = apply_filters(p.body());
 		writer.print(body);
 		writer.print("</div>");
 	}
 
-	private String parseLines(String body) {
+	private String apply_filters(String body) {
 		String[] lines = body.split("\r\n");
 		StringBuilder builder = new StringBuilder();
 		boolean inCode = false;
 		for(int i=0;i!=lines.length;++i) {
 			String line = lines[i];
+			// Strip out Unicode SPACE.
+			line = line.replace("\u00A0"," ");
+			//
 			if(line.equals(START_TAG)) {
 				builder.append("<div class='whiley-code'>");
 				inCode=true;
@@ -70,7 +73,7 @@ public class PostPages extends AbstractPage {
 				builder.append(line + "\n");
 			} else if(!inCode) {
 				builder.append("<p>");
-				builder.append(lines[i]);
+				builder.append(line);
 				builder.append("</p>");
 			}
 		}
