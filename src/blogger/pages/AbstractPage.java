@@ -79,9 +79,32 @@ public abstract class AbstractPage extends HttpMethodDispatchHandler {
 	}
 	public void writeLeftSidebar(PrintWriter writer, HttpRequest request) {
 		writer.println("<td id='left-sidebar'>");
-		writer.println("left sidebar");
+		writeAboutWidget(writer);
+		writeContributeWidget(writer);
 		writer.println("</td>");
 	}
+
+	public void writeAboutWidget(PrintWriter writer) {
+		writeBeginSidebar("ABOUT",writer);
+		writeSidebarItem("Play","http://whileylabs.com",writer);
+		writeSidebarItem("People","about/people/",writer);
+		writeSidebarItem("Overview","about/overview/",writer);
+		writeSidebarItem("Documentation","about/documentation/",writer);
+		writeSidebarItem("Getting Started","about/getting-started/",writer);
+		writeSidebarItem("Publications","about/publications/",writer);
+		writeSidebarItem("Roadmap","about/roadmap/",writer);
+		writeSidebarItem("FAQ","about/faq/",writer);
+		writeEndSidebar(writer);
+	}
+	public void writeContributeWidget(PrintWriter writer) {
+		writeBeginSidebar("CONTRIBUTE",writer);
+		writeSidebarItem("Github","http://github.com/Whiley",writer);
+		writeSidebarItem("Openhub","https://www.openhub.net/orgs/Whiley",writer);
+		writeSidebarItem("Compiler API","docs/api/index.html",writer);
+		writeSidebarItem("Forum","https://groups.google.com/forum/#!forum/whiley-discuss",writer);
+		writeEndSidebar(writer);
+	}
+
 	public void writePageContent(PrintWriter writer, HttpRequest request) {
 		writer.println("<td id='content'>");
 		writeContent(writer,request);
@@ -94,8 +117,20 @@ public abstract class AbstractPage extends HttpMethodDispatchHandler {
 	}
 	public void writePageFooter(PrintWriter writer, HttpRequest request) {
 		writer.println("<div id='footer'>");
-		writer.println("This is the footer");
 		writer.println("</div>");
+	}
+	public void writeBeginSidebar(String title, PrintWriter writer) {
+		writer.println("<div class='sidebar-title'>" + title + "</div>");
+		writer.println("<ul>");
+	}
+	public void writeSidebarItem(String title, String url, PrintWriter writer) {
+		writer.println("<ul>");
+		writer.println("<a class='sidebar-title' href='" + url + "'>" + title + "</a>");
+		writer.println("</ul>");
+	}
+	public void writeEndSidebar(PrintWriter writer) {
+		writer.println("</ul>");
+		writer.println("<hr class='sidebar-separator'/>");
 	}
 	public abstract void writeContent(PrintWriter writer, HttpRequest request);
 }
