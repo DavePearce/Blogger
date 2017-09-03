@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.HttpException;
@@ -91,7 +92,8 @@ public class PostPages extends AbstractPage {
 
 
 	private Post getPost(String uri) {
-		String link = uri.substring(1);
+		String[] splits = uri.substring(1).split("/");
+		String link = splits[splits.length-1];
 		for (Post p : posts.select().whereEqual("link", new SqlValue.Text(link))) {
 			return p;
 		}

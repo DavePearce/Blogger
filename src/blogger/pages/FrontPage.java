@@ -2,6 +2,8 @@ package blogger.pages;
 
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -55,7 +57,9 @@ public class FrontPage extends AbstractPage {
 
 	public void writePost(Post post, PrintWriter writer) {
 		writer.println("<div class='post'>");
-		writer.println("<div class='post-headline'><a href=\"/" + post.link() + "\">");
+		LocalDateTime date = post.date();
+		String link = date.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/" + post.link();
+		writer.println("<div class='post-headline'><a href=\"/" + link + "\">");
 		writer.println(post.title());
 		writer.println("</a></div><div class='post-byline'>");
 		writer.println("By Dave, ");

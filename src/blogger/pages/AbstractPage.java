@@ -3,6 +3,7 @@ package blogger.pages;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public abstract class AbstractPage extends HttpMethodDispatchHandler {
 	public void writeHeader(PrintWriter writer, HttpRequest request) {
 		writer.println("<head>");
 		writer.println("<title>Blogger Test</title>");
-		writer.println("<link href=\"css/style.css\" rel=\"stylesheet\" type=\"text/css\">");
+		writer.println("<link href=\"/css/style.css\" rel=\"stylesheet\" type=\"text/css\">");
 		writer.println("</head>");
 	}
 
@@ -87,20 +88,20 @@ public abstract class AbstractPage extends HttpMethodDispatchHandler {
 	public void writeAboutWidget(PrintWriter writer) {
 		writeBeginSidebar("ABOUT",writer);
 		writeSidebarItem("Play","http://whileylabs.com",writer);
-		writeSidebarItem("People","about/people/",writer);
-		writeSidebarItem("Overview","about/overview/",writer);
-		writeSidebarItem("Documentation","about/documentation/",writer);
-		writeSidebarItem("Getting Started","about/getting-started/",writer);
-		writeSidebarItem("Publications","about/publications/",writer);
-		writeSidebarItem("Roadmap","about/roadmap/",writer);
-		writeSidebarItem("FAQ","about/faq/",writer);
+		writeSidebarItem("People","/about/people/",writer);
+		writeSidebarItem("Overview","/about/overview/",writer);
+		writeSidebarItem("Documentation","/about/documentation/",writer);
+		writeSidebarItem("Getting Started","/about/getting-started/",writer);
+		writeSidebarItem("Publications","/about/publications/",writer);
+		writeSidebarItem("Roadmap","/about/roadmap/",writer);
+		writeSidebarItem("FAQ","/about/faq/",writer);
 		writeEndSidebar(writer);
 	}
 	public void writeContributeWidget(PrintWriter writer) {
 		writeBeginSidebar("CONTRIBUTE",writer);
 		writeSidebarItem("Github","http://github.com/Whiley",writer);
 		writeSidebarItem("Openhub","https://www.openhub.net/orgs/Whiley",writer);
-		writeSidebarItem("Compiler API","docs/api/index.html",writer);
+		writeSidebarItem("Compiler API","/docs/api/index.html",writer);
 		writeSidebarItem("Forum","https://groups.google.com/forum/#!forum/whiley-discuss",writer);
 		writeEndSidebar(writer);
 	}
@@ -124,9 +125,9 @@ public abstract class AbstractPage extends HttpMethodDispatchHandler {
 		writer.println("<ul>");
 	}
 	public void writeSidebarItem(String title, String url, PrintWriter writer) {
-		writer.println("<ul>");
+		writer.println("<li>");
 		writer.println("<a class='sidebar-title' href='" + url + "'>" + title + "</a>");
-		writer.println("</ul>");
+		writer.println("</li>");
 	}
 	public void writeEndSidebar(PrintWriter writer) {
 		writer.println("</ul>");
