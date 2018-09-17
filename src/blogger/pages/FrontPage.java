@@ -39,7 +39,9 @@ public class FrontPage extends AbstractPage {
 		int end = start + POSTS_PER_PAGE;
 		// Write post range selected
 		for(int i=start;i<end;++i) {
-			writePost(results.get(i), writer);
+			if(i < results.size()) {
+				writePost(results.get(i), writer);
+			}
 		}
 		// Print out links for next pages
 

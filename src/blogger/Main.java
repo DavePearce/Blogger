@@ -101,7 +101,8 @@ public class Main {
 		String username = System.getenv("USERNAME");
 		String password = System.getenv("PASSWORD");
 		// Second, create the database connection
-		Connection connection = getMySqlDatabaseConnection(username,new String(password));
+		Connection connection = getSqlLiteDatabaseConnection();
+		//Connection connection = getMySqlDatabaseConnection(username,new String(password));
 		SqlDatabase db = new SqlDatabase(connection);
 		SqlTable<Post> posts = new SqlTable<>(db,"posts",Post.class,Post.schema);
 
@@ -146,7 +147,7 @@ public class Main {
 		}
     }
 
-	private static Connection geSqlLiteDatabaseConnection() throws SQLException {
+	private static Connection getSqlLiteDatabaseConnection() throws SQLException {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (Exception e) {
