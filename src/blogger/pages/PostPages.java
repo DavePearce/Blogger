@@ -1,33 +1,26 @@
 package blogger.pages;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.protocol.HttpContext;
 
-import blogger.Main.Post;
-import jwebkit.http.HttpMethodDispatchHandler;
+import blogger.core.Comments;
+import blogger.core.Comments.Comment;
+import blogger.core.Posts;
+import blogger.core.Posts.Post;
 import jwebkit.sql.SqlQuery;
 import jwebkit.sql.SqlTable;
 import jwebkit.sql.SqlValue;
 
 public class PostPages extends AbstractPage {
-	private final SqlTable<Post> posts;
+	private final Posts posts;
+	private final Comments comments;
 
-	public PostPages(SqlTable<Post> posts) {
+	public PostPages(Posts posts, Comments comments) {
 		this.posts = posts;
+		this.comments = comments;
 	}
 
 	@Override
@@ -36,6 +29,7 @@ public class PostPages extends AbstractPage {
 		Post post = getPost(uri);
 		writePostTitle(writer,post);
 		writePostBody(writer,post);
+		writeComments(writer,post);
 	}
 
 	protected void writePostTitle(PrintWriter writer, Post p) {
@@ -49,6 +43,19 @@ public class PostPages extends AbstractPage {
 		String body = apply_filters(p.body());
 		writer.print(body);
 		writer.print("</div>");
+	}
+
+	protected void writeComments(PrintWriter writer, Post p) {
+		writer.print("<hr/>");
+		for (Comment c : comments.getCommentsForPost(p)) {
+			writer.print("<div class=\"comment\">");
+			writer.print("<div class=\"comment-byline\">");
+			writer.print(c.date().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+			writer.print("</div>");
+			writer.print("<div class=\"comment-body\">");
+			writer.print(c.body());
+			writer.print("</div>");
+		}
 	}
 
 	private String apply_filters(String body) {

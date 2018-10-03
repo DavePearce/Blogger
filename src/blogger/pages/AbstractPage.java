@@ -11,15 +11,11 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.protocol.HttpContext;
 
-import blogger.Main.Post;
 import jwebkit.http.HttpMethodDispatchHandler;
-import jwebkit.sql.SqlTable;
 
 public abstract class AbstractPage extends HttpMethodDispatchHandler {
 

@@ -13,16 +13,17 @@ import org.apache.http.HttpRequest;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 
-import blogger.Main.Post;
+import blogger.core.Posts;
+import blogger.core.Posts.Post;
 import jwebkit.sql.SqlQuery;
 import jwebkit.sql.SqlTable;
 
 public class FrontPage extends AbstractPage {
 	private final int POSTS_PER_PAGE = 10;
 	//
-	private final SqlTable<Post> posts;
+	private final Posts posts;
 
-	public FrontPage(SqlTable<Post> posts) {
+	public FrontPage(Posts posts) {
 		this.posts = posts;
 	}
 
@@ -32,6 +33,8 @@ public class FrontPage extends AbstractPage {
 		ArrayList<Post> results = posts.select()
 				.orderByDesc(posts.getColumn("datetime"))
 				.collect(new ArrayList<Post>());
+		//
+		System.out.println("RESULTS: " + results.size());
 		// Determine page number and other attributes
 		int page = getPage(request);
 		int numPages = results.size() / POSTS_PER_PAGE;
@@ -44,7 +47,6 @@ public class FrontPage extends AbstractPage {
 			}
 		}
 		// Print out links for next pages
-
 		if(page > 0) {
 			writer.print("<a href=\"?page=" + (page-1) + "\">");
 			writer.print("<< previous");
